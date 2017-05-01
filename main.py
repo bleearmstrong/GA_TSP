@@ -85,7 +85,7 @@ temp_city_map = city_map.copy()
 temp_city_map.reindex(outputs[0][0])
 distances.append(get_distance(outputs[0][0], city_map))
 f, (ax1, ax2) = plt.subplots(1, 2)
-for i in range(200):
+for i in range(10):
     print('iteration {}'.format(i))
     parent_1, parent_2 = parents[0], parents[1]
     new_family = cross_over(parent_1, parent_2)
@@ -105,7 +105,7 @@ for i in range(200):
     temp_city_map = temp_city_map.reindex(new_family_evaluated[0][0])
 
     ax1.cla()
-    ax1.plot(temp_city_map.x, temp_city_map.y, color='black')
+    ax1.plot(temp_city_map.x, temp_city_map.y, 'ko-')
     ax2.plot(list(range(len(distances))), distances, color='black')
 
     plt.pause(.01)
