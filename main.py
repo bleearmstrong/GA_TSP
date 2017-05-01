@@ -4,6 +4,9 @@ import random
 import pandas as pd
 import math
 import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+
+plt.ion()
 
 # prepare data
 
@@ -15,7 +18,7 @@ city_map = pd.DataFrame({'x': pd.Series(x_points)
 
 # what does the path look like initially?
 
-plt.plot(city_map.x, city_map.y)
+# plt.plot(city_map.x, city_map.y, color='black')
 
 # generate initial path
 sequence = list(range(0, 100))
@@ -76,7 +79,13 @@ def mutate(seq):
 
 
 parents = [outputs[0][0], outputs[1][0]]
-for i in range(1000):
+distances = []
+iterations = []
+temp_city_map = city_map.copy()
+temp_city_map.reindex(outputs[0][0])
+distances.append(get_distance(outputs[0][0], city_map))
+f, (ax1, ax2) = plt.subplots(1, 2)
+for i in range(200):
     print('iteration {}'.format(i))
     parent_1, parent_2 = parents[0], parents[1]
     new_family = cross_over(parent_1, parent_2)
@@ -88,7 +97,20 @@ for i in range(1000):
     new_family_evaluated.sort(key=lambda x: x[1])
     parents = [new_family_evaluated[0][0], new_family_evaluated[1][0]]
     print('Current best: {}'.format(new_family_evaluated[0][1]))
+    distances.append(new_family_evaluated[0][1])
     best_seq = new_family_evaluated[0][0]
+
+    # plotting
+
+    temp_city_map = temp_city_map.reindex(new_family_evaluated[0][0])
+
+    ax1.cla()
+    ax1.plot(temp_city_map.x, temp_city_map.y, color='black')
+    ax2.plot(list(range(len(distances))), distances, color='black')
+
+    plt.pause(.01)
+
+
 
 print('done')
 print(new_family_evaluated[0][1])
