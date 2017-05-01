@@ -64,14 +64,12 @@ def cross_over_2(seq1, seq2):
     output = list()
     cut_off_points = [random.randint(1, len(seq1)) for _ in range(20)]
     for point in cut_off_points:
-        seq1_copy = seq1.copy()
-        seq2_copy = seq2.copy()
-        new_seq1 = seq1_copy[0:point]
-        for item in seq2_copy:
+        new_seq1 = seq1[0:point]
+        for item in seq2:
             if item not in new_seq1:
                 new_seq1.append(item)
-        new_seq2 = seq2_copy[0:point]
-        for item in seq1_copy:
+        new_seq2 = seq2[0:point]
+        for item in seq1:
             if item not in new_seq2:
                 new_seq2.append(item)
         output.append(new_seq1)
