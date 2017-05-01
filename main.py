@@ -10,8 +10,10 @@ plt.ion()
 
 # prepare data
 
-x_points = [random.uniform(0, 100) for _ in range(100)]
-y_points = [random.uniform(0, 100) for _ in range(100)]
+n = 50
+
+x_points = [random.uniform(0, 100) for _ in range(n)]
+y_points = [random.uniform(0, 100) for _ in range(n)]
 
 city_map = pd.DataFrame({'x': pd.Series(x_points)
                         , 'y': pd.Series(y_points)})
@@ -21,7 +23,7 @@ city_map = pd.DataFrame({'x': pd.Series(x_points)
 # plt.plot(city_map.x, city_map.y, color='black')
 
 # generate initial path
-sequence = list(range(0, 100))
+sequence = list(range(0, n))
 random.shuffle(sequence)
 
 # get distance
@@ -37,7 +39,7 @@ get_distance(seq=sequence, city_map=city_map)
 
 
 outputs = list()
-sequence = list(range(0, 100))
+sequence = list(range(0, n))
 for i in range(100):
     temp_sequence = sequence.copy()
     random.shuffle(temp_sequence)
@@ -53,6 +55,25 @@ def cross_over(seq1, seq2):
     for point in cut_off_points:
         new_seq1 = seq1[0:point] + seq2[point:]
         new_seq2 = seq2[0:point] + seq1[point:]
+        output.append(new_seq1)
+        output.append(new_seq2)
+    return output
+
+
+def cross_over_2(seq1, seq2):
+    output = list()
+    cut_off_points = [random.randint(1, len(seq1)) for _ in range(20)]
+    for point in cut_off_points:
+        seq1_copy = seq1.copy()
+        seq2_copy = seq2.copy()
+        new_seq1 = seq1_copy[0:point]
+        for item in seq2_copy:
+            if item not in new_seq1:
+                new_seq1.append(item)
+        new_seq2 = seq2_copy[0:point]
+        for item in seq1_copy:
+            if item not in new_seq2:
+                new_seq2.append(item)
         output.append(new_seq1)
         output.append(new_seq2)
     return output
@@ -85,13 +106,13 @@ temp_city_map = city_map.copy()
 temp_city_map.reindex(outputs[0][0])
 distances.append(get_distance(outputs[0][0], city_map))
 f, (ax1, ax2) = plt.subplots(1, 2)
-for i in range(10):
+for i in range(100):
     print('iteration {}'.format(i))
     parent_1, parent_2 = parents[0], parents[1]
-    new_family = cross_over(parent_1, parent_2)
-    new_family_fixed = [fix_seq(seq) for seq in new_family]
-    new_family_mutated = [mutate(seq) for seq in new_family_fixed]
-    new_family_mutated += new_family_fixed
+    new_family = cross_over_2(parent_1, parent_2)
+    # new_family_fixed = [fix_seq(seq) for seq in new_family]
+    new_family_mutated = [mutate(seq) for seq in new_family]
+    new_family_mutated += new_family
     new_family_mutated.append(parent_1)
     new_family_mutated.append(parent_2)
     new_family_evaluated = [(seq, get_distance(seq, city_map)) for seq in new_family_mutated]
