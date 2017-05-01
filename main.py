@@ -91,6 +91,7 @@ for i in range(10):
     new_family = cross_over(parent_1, parent_2)
     new_family_fixed = [fix_seq(seq) for seq in new_family]
     new_family_mutated = [mutate(seq) for seq in new_family_fixed]
+    new_family_mutated += new_family_fixed
     new_family_mutated.append(parent_1)
     new_family_mutated.append(parent_2)
     new_family_evaluated = [(seq, get_distance(seq, city_map)) for seq in new_family_mutated]
@@ -106,7 +107,9 @@ for i in range(10):
 
     ax1.cla()
     ax1.plot(temp_city_map.x, temp_city_map.y, 'ko-')
+    ax1.set_title('Map')
     ax2.plot(list(range(len(distances))), distances, color='black')
+    ax2.set_title('Distance')
 
     plt.pause(.01)
 
