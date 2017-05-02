@@ -1,8 +1,5 @@
-import seaborn as sn
-import numpy as np
 import random
 import pandas as pd
-import math
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
@@ -10,7 +7,8 @@ plt.ion()
 
 # prepare data
 
-n = 50
+n = 100
+n_cnt = 50
 
 x_points = [random.uniform(0, 100) for _ in range(n)]
 y_points = [random.uniform(0, 100) for _ in range(n)]
@@ -27,6 +25,8 @@ sequence = list(range(0, n))
 random.shuffle(sequence)
 
 # get distance
+
+
 def get_distance(seq, city_map):
     temp_city = city_map.copy().reindex(seq)
     temp_city['x2'] = temp_city.x.shift(1)
@@ -49,20 +49,9 @@ for i in range(100):
 outputs.sort(key=lambda x: x[1])
 
 
-def cross_over(seq1, seq2):
+def cross_over_2(seq1, seq2, n_cnt):
     output = list()
-    cut_off_points = [random.randint(1, len(seq1)) for _ in range(20)]
-    for point in cut_off_points:
-        new_seq1 = seq1[0:point] + seq2[point:]
-        new_seq2 = seq2[0:point] + seq1[point:]
-        output.append(new_seq1)
-        output.append(new_seq2)
-    return output
-
-
-def cross_over_2(seq1, seq2):
-    output = list()
-    cut_off_points = [random.randint(1, len(seq1)) for _ in range(20)]
+    cut_off_points = [random.randint(1, len(seq1)) for _ in range(n_cnt)]
     for point in cut_off_points:
         new_seq1 = seq1[0:point]
         for item in seq2:
@@ -104,11 +93,10 @@ temp_city_map = city_map.copy()
 temp_city_map.reindex(outputs[0][0])
 distances.append(get_distance(outputs[0][0], city_map))
 f, (ax1, ax2) = plt.subplots(1, 2)
-for i in range(100):
+for i in range(1000):
     print('iteration {}'.format(i))
     parent_1, parent_2 = parents[0], parents[1]
-    new_family = cross_over_2(parent_1, parent_2)
-    # new_family_fixed = [fix_seq(seq) for seq in new_family]
+    new_family = cross_over_2(parent_1, parent_2, n_cnt)
     new_family_mutated = [mutate(seq) for seq in new_family]
     new_family_mutated += new_family
     new_family_mutated.append(parent_1)
