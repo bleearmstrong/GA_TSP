@@ -28,11 +28,11 @@ random.shuffle(sequence)
 
 # get distance
 def get_distance(seq, city_map):
-    distance = 0
-    for i in range(len(seq) - 1):
-        point_1 = city_map.loc[seq[i]]
-        point_2 = city_map.loc[seq[i + 1]]
-        distance += math.sqrt((point_2.x - point_1.x)**2 + (point_2.y - point_1.y)**2)
+    temp_city = city_map.copy().reindex(seq)
+    temp_city['x2'] = temp_city.x.shift(1)
+    temp_city['y2'] = temp_city.y.shift(1)
+    temp_city['distance'] = ((temp_city.x2 - temp_city.x) ** 2 + (temp_city.y2 - temp_city.y) ** 2) ** (.5)
+    distance = temp_city.distance.sum()
     return distance
 
 get_distance(seq=sequence, city_map=city_map)
